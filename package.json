@@ -1,0 +1,26 @@
+{
+  "name": "betshare-backend-api-v0",
+  "version": "0.0.1",
+  "private": true,
+  "description": "New Swagger API Project",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "aws-sdk": "^2.307.0",
+    "express": "^4.12.3",
+    "firebase-admin": "^6.0.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.13.14",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test"
+  }
+}

@@ -1,0 +1,2846 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Church Records Backend REST API
+host: localhost:10120
+# host: dmkapi.herokuapp.com
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /believer:
+    x-swagger-router-controller: believer.controller
+    get:
+      tags: [Believer]
+      description: Returns list of believer from Believer Collection
+      operationId: getAllBeliever
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Believer]
+      description: Creates new believer entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createBeliever
+      parameters:
+        - name: believerdata
+          required: true
+          in: body
+          description: a new believer details
+          schema:
+            $ref: "#/definitions/believerreg"
+      responses:
+        "200":
+          description: New Believer Created
+          schema:
+            $ref: "#/definitions/believer"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Believer]
+      description: Remove all believers in database
+      operationId: removeAllBeliever
+      responses:
+        "200":
+          description: Successfully removed all believers
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+  /believer/{believerid}:
+    x-swagger-router-controller: believer.controller
+    get:
+      tags: [Believer]
+      description: Return single believer by given id
+      operationId: getSingleBeliever
+      parameters:
+        - name: believerid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            $ref: "#/definitions/believer"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Believer]
+      description: Remove single believer by given id
+      operationId: removeSingleBeliever
+      parameters:
+        - name: believerid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Believer]
+      description: Update by believer id
+      operationId: updateSingleBeliever
+      parameters:
+        - name: believerid
+          in: path
+          required: true
+          type: string
+        - name: believer
+          in: body
+          description: The Updated believer info
+          required: true
+          schema:
+            $ref: "#/definitions/believer"
+      responses:
+        "200":
+          description: Believer Found and Updated
+          schema:
+            $ref: "#/definitions/believer"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve Believer's info
+  /believer/{believerid}/{groupcode}/info:
+    x-swagger-router-controller: believer.controller
+    get:
+      tags: [Believer]
+      description: Return infos of a single believer by given by id
+      operationId: getBelieverInfo
+      parameters:
+        - name: believerid
+          required: true
+          in: path
+          type: string
+        - name: groupcode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Info Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/info"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#path to get believers of certain age range
+  /believer/{agefrom}/{ageto}/:
+    x-swagger-router-controller: believer.controller
+    get:
+      tags: [Believer]
+      description: Return single believer by given id
+      operationId: getRangedBeliever
+      parameters:
+        - name: agefrom
+          required: true
+          in: path
+          type: number
+        - name: ageto
+          required: true
+          in: path
+          type: number
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# Add Beliver's relative Path
+  /believer/{believerid}/addrelative:
+    x-swagger-router-controller: believer.controller
+    post:
+      tags: [Believer]
+      description: Add relative to the believer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: addRelative
+      parameters:
+        - name: believerid
+          required: true
+          in: path
+          type: string
+        - name: relativedata
+          required: true
+          in: body
+          description: new relative data
+          schema:
+            $ref: "#/definitions/relative"
+      responses:
+        "200":
+          description: New relative Added
+          schema:
+            $ref: "#/definitions/message"
+        "404":
+          description: Invalid Believer
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# Admin Path Definition
+  /admin:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: admin.controller
+    get:
+      tags: [Admin]
+      description: Returns list of admin from Admin Collection
+      # used as the method name of the controller
+      operationId: getAllAdmin
+      responses:
+        "200":
+          description: Admin Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/admin"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Admin]
+      description: Creates new admin entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createAdmin
+      parameters:
+        - name: admindata
+          required: true
+          in: body
+          description: a new admin details
+          schema:
+            $ref: "#/definitions/adminreg"
+      responses:
+        "200":
+          description: New Admin Created
+          schema:
+            $ref: "#/definitions/admin"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Admin]
+      description: Remove all admins in database
+      operationId: removeAllAdmin
+      responses:
+        "200":
+          description: Successfully removed all admins
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /admin/{adminid}:
+    x-swagger-router-controller: admin.controller
+    get:
+      tags: [Admin]
+      description: Return single admin by given id
+      operationId: getSingleAdmin
+      parameters:
+        - name: adminid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Admin Found
+          schema:
+            $ref: "#/definitions/admin"
+        "404":
+          description: Admin not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Admin]
+      description: Remove single admin by given id
+      operationId: removeSingleAdmin
+      parameters:
+        - name: adminid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Admin]
+      description: Update by admin id
+      operationId: updateSingleAdmin
+      parameters:
+        - name: adminid
+          in: path
+          required: true
+          type: string
+        - name: admin
+          in: body
+          description: The Updated admin info
+          required: true
+          schema:
+            $ref: "#/definitions/admin"
+      responses:
+        "200":
+          description: Admin Found and Updated
+          schema:
+            $ref: "#/definitions/admin"
+        "404":
+          description: Admin not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# Authentication Marchavel goes here
+  /authentication:
+    x-swagger-router-controller: authentication.controller
+    post:
+      tags: [Authentication]
+      description: authenticate users
+      operationId: authenticateUser
+      parameters:
+        - name: authenticatedata
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/login"
+      responses:
+        "200":
+          description: believer Found
+          schema:
+            $ref: "#/definitions/authres"
+        "404":
+          description: believer Not Found
+          schema:
+            $ref: "#/definitions/message"
+
+        "500":
+          description: believer authenticated
+          schema:
+            $ref: "#/definitions/message"
+# Authentication Marchavel goes here
+  /authentication/checkusercode:
+    x-swagger-router-controller: authentication.controller
+    post:
+      tags: [Authentication]
+      description: Check if believer exist
+      operationId: checkCode
+      parameters:
+        - name: usercode
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/usercode"
+      responses:
+        "200":
+          description: believer Found
+          schema:
+            $ref: "#/definitions/message"
+
+        "404":
+          description: believer Not Found
+          schema:
+            $ref: "#/definitions/message"
+
+        "500":
+          description: believer authenticated
+          schema:
+            $ref: "#/definitions/message"
+# Path Defition to update Password
+  /authentication/updatepassword:
+    x-swagger-router-controller: authentication.controller
+    post:
+      tags: [Authentication]
+      description: Updates Password
+      operationId: updatePassword
+      parameters:
+        - name: profiledata
+          in: body
+          description: The Updated info
+          required: true
+          schema:
+            $ref: "#/definitions/logindata"
+      responses:
+        "200":
+          description: User Found and Updated
+          schema:
+            $ref: "#/definitions/message"
+        "404":
+          description: User not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Authentication Marchavel
+
+# Path Defition to update ProfilePic
+  /believer/{believerid}/updateprofilepic:
+    x-swagger-router-controller: believer.controller
+    post:
+      tags: [Believer]
+      description: Updates Profilepic
+      operationId: updateProfilePic
+      parameters:
+        - name: believerid
+          in: path
+          required: true
+          type: string
+        - name: profiledata
+          in: body
+          description: The Updated info
+          required: true
+          schema:
+            $ref: "#/definitions/profiledata"
+      responses:
+        "200":
+          description: Believer Found and Updated
+          schema:
+            $ref: "#/definitions/message"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# Path Defition to update Notification Token
+  /believer/{believerid}/updatetoken:
+    x-swagger-router-controller: believer.controller
+    post:
+      tags: [Believer]
+      description: Updates token
+      operationId: updateDeviceId
+      parameters:
+        - name: believerid
+          in: path
+          required: true
+          type: string
+        - name: device_id
+          in: body
+          description: The Updated info
+          required: true
+          schema:
+            $ref: "#/definitions/tokendata"
+      responses:
+        "200":
+          description: Believer Found and Updated
+          schema:
+            $ref: "#/definitions/message"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The Start of Dio Marchavel
+  /dio:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Returns list of dios from Dio Collection
+      # used as the method name of the controller
+      operationId: getAllDio
+      responses:
+        "200":
+          description: Dio Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/dio"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Dio]
+      description: Creates new dio entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createDio
+      parameters:
+        - name: diodata
+          required: true
+          in: body
+          description: a new dio details
+          schema:
+            $ref: "#/definitions/dio"
+      responses:
+        "200":
+          description: New Odd Created
+          schema:
+            $ref: "#/definitions/dio"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Dio]
+      description: Remove all dios in database
+      operationId: removeAllDio
+      responses:
+        "200":
+          description: Successfully removed all dios
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /dio/{dioid}:
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Return single dio by given id
+      operationId: getSingleDio
+      parameters:
+        - name: dioid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Dio Found
+          schema:
+            $ref: "#/definitions/dio"
+        "404":
+          description: Dio not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Dio]
+      description: Remove single dio by given id
+      operationId: removeSingleDio
+      parameters:
+        - name: dioid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Dio]
+      description: Update by dio id
+      operationId: updateSingleDio
+      parameters:
+        - name: dioid
+          in: path
+          required: true
+          type: string
+        - name: dio
+          in: body
+          description: The Updated dio info
+          required: true
+          schema:
+            $ref: "#/definitions/dio"
+      responses:
+        "200":
+          description: Dio Found and Updated
+          schema:
+            $ref: "#/definitions/dio"
+        "404":
+          description: Dio not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve All communities of specific Dio
+  /dio/{diocode}/community:
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Return All churches by given diocode
+      operationId: getDioCommunity
+      parameters:
+        - name: diocode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Community Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/community"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve All churches of specific Dio
+  /dio/{diocode}/churches:
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Return All churches by given diocode
+      operationId: getDioChurches
+      parameters:
+        - name: diocode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Church Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/church"
+        "404":
+          description: Church not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve dio Believers
+  /dio/{diocode}/believers:
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Return Believers of dio by given dio code
+      operationId: getDioBeliever
+      parameters:
+        - name: diocode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Dioes
+#Path to retrieve dio Believers  By age Range
+  /dio/{diocode}/{agefrom}/{ageto}/believers:
+    x-swagger-router-controller: dios.controller
+    get:
+      tags: [Dio]
+      description: Return Aged Believers of dio by given diocode
+      operationId: getDioBelieverByAge
+      parameters:
+        - name: diocode
+          required: true
+          in: path
+          type: string
+        - name: agefrom
+          required: true
+          in: path
+          type: number
+        - name: ageto
+          required: true
+          in: path
+          type: number
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Believer not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Dios
+# The Start of Church Marchavel
+  /church:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Returns list of churchs from Church Collection
+      # used as the method name of the controller
+      operationId: getAllChurch
+      responses:
+        "200":
+          description: Church Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/church"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Church]
+      description: Creates new church entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createChurch
+      parameters:
+        - name: churchdata
+          required: true
+          in: body
+          description: a new church details
+          schema:
+            $ref: "#/definitions/church"
+      responses:
+        "200":
+          description: New church Created
+          schema:
+            $ref: "#/definitions/church"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Church]
+      description: Remove all churches in database
+      operationId: removeAllChurch
+      responses:
+        "200":
+          description: Successfully removed all churches
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /church/{churchid}:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return single church by given id
+      operationId: getSingleChurch
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Church Found
+          schema:
+            $ref: "#/definitions/church"
+        "404":
+          description: Church not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Church]
+      description: Remove single church by given id
+      operationId: removeSingleChurch
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Church]
+      description: Update by church id
+      operationId: updateSingleChurch
+      parameters:
+        - name: churchid
+          in: path
+          required: true
+          type: string
+        - name: church
+          in: body
+          description: The Updated church info
+          required: true
+          schema:
+            $ref: "#/definitions/church"
+      responses:
+        "200":
+          description: Church Found and Updated
+          schema:
+            $ref: "#/definitions/church"
+        "404":
+          description: Church not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve All communities of specific Church
+  /church/{churchid}/community:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return All Communities by given churchcode
+      operationId: getChurchCommunity
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Community Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/community"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+#Path to retrieve All contributions of specific Church
+  /church/{churchid}/contribution:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return All Contributions by given churchcode
+      operationId: getChurchContribution
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Contribution Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/contribution"
+        "404":
+          description: Contribution not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve church Believers
+  /church/{churchid}/believers:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return single church by given id
+      operationId: getChurchBeliever
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Church not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+#Path to retrieve church Admins
+  /church/{churchid}/admin:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return single church by given id
+      operationId: getChurchAdmin
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Admin Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/admin"
+        "404":
+          description: Admin not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Churches
+#Path to retrieve church Believers  By age Range
+  /church/{churchid}/{agefrom}/{ageto}/believers:
+    x-swagger-router-controller: church.controller
+    get:
+      tags: [Church]
+      description: Return single church by given id
+      operationId: getChurchBelieverByAge
+      parameters:
+        - name: churchid
+          required: true
+          in: path
+          type: string
+        - name: agefrom
+          required: true
+          in: path
+          type: number
+        - name: ageto
+          required: true
+          in: path
+          type: number
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Church not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Churches
+# The Start of Info Marchavel
+  /info:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: info.controller
+    get:
+      tags: [Info]
+      description: Returns list of info from Info Collection
+      # used as the method name of the controller
+      operationId: getAllInfo
+      responses:
+        "200":
+          description: Info Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/info"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Info]
+      description: Creates new info entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createInfo
+      parameters:
+        - name: infodata
+          required: true
+          in: body
+          description: a new info details
+          schema:
+            $ref: "#/definitions/info"
+      responses:
+        "200":
+          description: New info Created
+          schema:
+            $ref: "#/definitions/info"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Info]
+      description: Remove all infoes in database
+      operationId: removeAllInfo
+      responses:
+        "200":
+          description: Successfully removed all infoes
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /info/{infoid}:
+    x-swagger-router-controller: info.controller
+    get:
+      tags: [Info]
+      description: Return single info by given id
+      operationId: getSingleInfo
+      parameters:
+        - name: infoid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Info Found
+          schema:
+            $ref: "#/definitions/info"
+        "404":
+          description: Info not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Info]
+      description: Remove single info by given id
+      operationId: removeSingleInfo
+      parameters:
+        - name: infoid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Info]
+      description: Update by info id
+      operationId: updateSingleInfo
+      parameters:
+        - name: infoid
+          in: path
+          required: true
+          type: string
+        - name: info
+          in: body
+          description: The Updated info info
+          required: true
+          schema:
+            $ref: "#/definitions/info"
+      responses:
+        "200":
+          description: Info Found and Updated
+          schema:
+            $ref: "#/definitions/info"
+        "404":
+          description: Info not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# Get info of specific church
+  /info/{groupcode}/infos:
+    x-swagger-router-controller: info.controller
+    get:
+      tags: [Info]
+      description: Return info by given groupcode
+      operationId: getGroupInfo
+      parameters:
+        - name: groupcode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Info Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/info"
+        "404":
+          description: Info not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Infos
+# The Start of Community Marchavel
+  /community:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: community.controller
+    get:
+      tags: [Community]
+      description: Returns list of communitys from Community Collection
+      # used as the method name of the controller
+      operationId: getAllCommunity
+      responses:
+        "200":
+          description: Community Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/community"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Community]
+      description: Creates new community entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createCommunity
+      parameters:
+        - name: communitydata
+          required: true
+          in: body
+          description: a new community details
+          schema:
+            $ref: "#/definitions/community"
+      responses:
+        "200":
+          description: New community Created
+          schema:
+            $ref: "#/definitions/community"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Community]
+      description: Remove all communityes in database
+      operationId: removeAllCommunity
+      responses:
+        "200":
+          description: Successfully removed all communityes
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+  /community/{communityid}:
+    x-swagger-router-controller: community.controller
+    get:
+      tags: [Community]
+      description: Return single community by given id
+      operationId: getSingleCommunity
+      parameters:
+        - name: communityid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Community Found
+          schema:
+            $ref: "#/definitions/community"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Community]
+      description: Remove single community by given id
+      operationId: removeSingleCommunity
+      parameters:
+        - name: communityid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Community]
+      description: Update by community id
+      operationId: updateSingleCommunity
+      parameters:
+        - name: communityid
+          in: path
+          required: true
+          type: string
+        - name: community
+          in: body
+          description: The Updated community info
+          required: true
+          schema:
+            $ref: "#/definitions/community"
+      responses:
+        "200":
+          description: Community Found and Updated
+          schema:
+            $ref: "#/definitions/community"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve community's Believers
+  /community/{communitycode}/believers:
+    x-swagger-router-controller: community.controller
+    get:
+      tags: [Community]
+      description: Return single community by given id
+      operationId: getCommunityBeliever
+      parameters:
+        - name: communitycode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve community's Believers By Age Range
+  /community/{communitycode}/{agefrom}/{ageto}/believers:
+    x-swagger-router-controller: community.controller
+    get:
+      tags: [Community]
+      description: Return single community by given id
+      operationId: getCommunityBelieverByAge
+      parameters:
+        - name: communitycode
+          required: true
+          in: path
+          type: string
+        - name: agefrom
+          required: true
+          in: path
+          type: number
+        - name: ageto
+          required: true
+          in: path
+          type: number
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Community not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Community
+
+# The Start of Contribution Marchavel
+  /contribution:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: contribution.controller
+    get:
+      tags: [Contribution]
+      description: Returns list of contributions from Contribution Collection
+      # used as the method name of the controller
+      operationId: getAllContribution
+      responses:
+        "200":
+          description: Contribution Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/contribution"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Contribution]
+      description: Creates new contribution entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createContribution
+      parameters:
+        - name: contributiondata
+          required: true
+          in: body
+          description: a new contribution details
+          schema:
+            $ref: "#/definitions/contribution"
+      responses:
+        "200":
+          description: New contribution Created
+          schema:
+            $ref: "#/definitions/contribution"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Contribution]
+      description: Remove all contributiones in database
+      operationId: removeAllContribution
+      responses:
+        "200":
+          description: Successfully removed all contributiones
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+  /contribution/{contributionid}:
+    x-swagger-router-controller: contribution.controller
+    get:
+      tags: [Contribution]
+      description: Return single contribution by given id
+      operationId: getSingleContribution
+      parameters:
+        - name: contributionid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Contribution Found
+          schema:
+            $ref: "#/definitions/contribution"
+        "404":
+          description: Contribution not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Contribution]
+      description: Remove single contribution by given id
+      operationId: removeSingleContribution
+      parameters:
+        - name: contributionid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Contribution]
+      description: Update by contribution id
+      operationId: updateSingleContribution
+      parameters:
+        - name: contributionid
+          in: path
+          required: true
+          type: string
+        - name: contribution
+          in: body
+          description: The Updated contribution info
+          required: true
+          schema:
+            $ref: "#/definitions/contribution"
+      responses:
+        "200":
+          description: Contribution Found and Updated
+          schema:
+            $ref: "#/definitions/contribution"
+        "404":
+          description: Contribution not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+# Contribution contributors
+  /contribution/{contributionid}/contributor/:
+    x-swagger-router-controller: contribution.controller
+    get:
+      tags: [Contribution]
+      description: Return single contribution by given id
+      operationId: getContributionContributor
+      parameters:
+        - name: contributionid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Contribution Found
+          schema:
+            $ref: "#/definitions/contributor"
+        "404":
+          description: Contribution not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve contribution's Believers
+  /contribution/{contributioncode}/believers:
+    x-swagger-router-controller: contribution.controller
+    get:
+      tags: [Contribution]
+      description: Return single contribution by given id
+      operationId: getContributionBeliever
+      parameters:
+        - name: contributioncode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Contribution not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+# The Start of Contributor Marchavel
+  /contributor:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: contributor.controller
+    get:
+      tags: [Contributor]
+      description: Returns list of contributors from Contributor Collection
+      # used as the method name of the controller
+      operationId: getAllContributor
+      responses:
+        "200":
+          description: Contributor Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/contributor"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Contributor]
+      description: Creates new contributor entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createContributor
+      parameters:
+        - name: contributordata
+          required: true
+          in: body
+          description: a new contributor details
+          schema:
+            $ref: "#/definitions/contributor"
+      responses:
+        "200":
+          description: New contributor Created
+          schema:
+            $ref: "#/definitions/contributor"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Contributor]
+      description: Remove all contributores in database
+      operationId: removeAllContributor
+      responses:
+        "200":
+          description: Successfully removed all contributores
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+  /contributor/{contributorid}:
+    x-swagger-router-controller: contributor.controller
+    get:
+      tags: [Contributor]
+      description: Return single contributor by given id
+      operationId: getSingleContributor
+      parameters:
+        - name: contributorid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Contributor Found
+          schema:
+            $ref: "#/definitions/contributor"
+        "404":
+          description: Contributor not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Contributor]
+      description: Remove single contributor by given id
+      operationId: removeSingleContributor
+      parameters:
+        - name: contributorid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Contributor]
+      description: Update by contributor id
+      operationId: updateSingleContributor
+      parameters:
+        - name: contributorid
+          in: path
+          required: true
+          type: string
+        - name: contributor
+          in: body
+          description: The Updated contributor info
+          required: true
+          schema:
+            $ref: "#/definitions/contributor"
+      responses:
+        "200":
+          description: Contributor Found and Updated
+          schema:
+            $ref: "#/definitions/contributor"
+        "404":
+          description: Contributor not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+#Path to retrieve contributor's Believers
+  /contributor/{contributorcode}/believers:
+    x-swagger-router-controller: contributor.controller
+    get:
+      tags: [Contributor]
+      description: Return single contributor by given id
+      operationId: getContributorBeliever
+      parameters:
+        - name: contributorcode
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Believer Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/believer"
+        "404":
+          description: Contributor not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+# The Start of Nation Marchavel
+  /nation:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: nations.controller
+    get:
+      tags: [Nation]
+      description: Returns list of nations from Nation Collection
+      # used as the method name of the controller
+      operationId: getAllNation
+      responses:
+        "200":
+          description: Nation Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/country"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Nation]
+      description: Creates new nation entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createNation
+      parameters:
+        - name: nationdata
+          required: true
+          in: body
+          description: a new nation details
+          schema:
+            $ref: "#/definitions/country"
+      responses:
+        "200":
+          description: New Odd Created
+          schema:
+            $ref: "#/definitions/country"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Nation]
+      description: Remove all nations in database
+      operationId: removeAllNation
+      responses:
+        "200":
+          description: Successfully removed all nations
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /nation/{nationid}:
+    x-swagger-router-controller: nations.controller
+    get:
+      tags: [Nation]
+      description: Return single nation by given id
+      operationId: getSingleNation
+      parameters:
+        - name: nationid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Nation Found
+          schema:
+            $ref: "#/definitions/country"
+        "404":
+          description: Nation not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Nation]
+      description: Remove single nation by given id
+      operationId: removeSingleNation
+      parameters:
+        - name: nationid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Nation]
+      description: Update by nation id
+      operationId: updateSingleNation
+      parameters:
+        - name: nationid
+          in: path
+          required: true
+          type: string
+        - name: nation
+          in: body
+          description: The Updated nation info
+          required: true
+          schema:
+            $ref: "#/definitions/country"
+      responses:
+        "200":
+          description: Nation Found and Updated
+          schema:
+            $ref: "#/definitions/country"
+        "404":
+          description: Nation not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Nations
+# The Start of Agegroup Marchavel
+  /agegroup:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: agegroup.controller
+    get:
+      tags: [Agegroup]
+      description: Returns list of agegroups from Agegroup Collection
+      # used as the method name of the controller
+      operationId: getAllAgegroup
+      responses:
+        "200":
+          description: Agegroup Found
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/agegroup"
+        "404":
+          description: Empty Collection
+          schema:
+            $ref: "#/definitions/message"
+        # responses may fall through to errors
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    post:
+      tags: [Agegroup]
+      description: Creates new agegroup entry
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: createAgegroup
+      parameters:
+        - name: agegroupdata
+          required: true
+          in: body
+          description: a new agegroup details
+          schema:
+            $ref: "#/definitions/agegroup"
+      responses:
+        "200":
+          description: New Odd Created
+          schema:
+            $ref: "#/definitions/agegroup"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Agegroup]
+      description: Remove all agegroups in database
+      operationId: removeAllAgegroup
+      responses:
+        "200":
+          description: Successfully removed all agegroups
+          schema:
+            $ref: "#/definitions/message"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+
+  /agegroup/{agegroupid}:
+    x-swagger-router-controller: agegroup.controller
+    get:
+      tags: [Agegroup]
+      description: Return single agegroup by given id
+      operationId: getSingleAgegroup
+      parameters:
+        - name: agegroupid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Agegroup Found
+          schema:
+            $ref: "#/definitions/agegroup"
+        "404":
+          description: Agegroup not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    delete:
+      tags: [Agegroup]
+      description: Remove single agegroup by given id
+      operationId: removeSingleAgegroup
+      parameters:
+        - name: agegroupid
+          required: true
+          in: path
+          type: string
+      responses:
+        "200":
+          description: Successfully removed
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+    patch:
+      tags: [Agegroup]
+      description: Update by agegroup id
+      operationId: updateSingleAgegroup
+      parameters:
+        - name: agegroupid
+          in: path
+          required: true
+          type: string
+        - name: agegroup
+          in: body
+          description: The Updated agegroup info
+          required: true
+          schema:
+            $ref: "#/definitions/agegroup"
+      responses:
+        "200":
+          description: Agegroup Found and Updated
+          schema:
+            $ref: "#/definitions/agegroup"
+        "404":
+          description: Agegroup not Found
+          schema:
+            $ref: "#/definitions/message"
+        "500":
+          description: Error
+          schema:
+            $ref: "#/definitions/message"
+# The End of Agegroups
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+# Dio Schema Definition
+  dio:
+    properties:
+      _id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Church Schema Definition
+  church:
+    properties:
+      _id:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      churchlocation:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchleader:
+        type: object
+        properties:
+          leadername:
+            type: string
+          position:
+            type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Community Schema Definition
+  community:
+    properties:
+      _id:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      communitylocation:
+        type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+
+# Contribution Schema Definition
+  contribution:
+    properties:
+      _id:
+        type: string
+      contributionname:
+        type: string
+      contributionpurpose:
+        type: string
+      startin:
+        type: string
+      deadline:
+        type: string
+      amount:
+        type: number
+      level:
+        type: string
+      affectedgroup:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+            location:
+              type: string
+      believerinclude:
+        type: string
+      agelimit:
+        type: object
+        properties:
+          low:
+            type: string
+          high:
+            type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+
+# Contributor Schema Definition
+  contributor:
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+      believerid:
+        type: string
+      phonenumber:
+        type: string
+      amount:
+        type: number
+      contributionid:
+        type: string
+      contributionamount:
+        type: number
+      cellgroup:
+        type: object
+        properties:
+          cellgroupid:
+            type: string
+          cellgroupname:
+            type: string
+      church:
+        type: object
+        properties:
+          churchid:
+            type: string
+          churchcode:
+            type: string
+          churchname:
+            type: string
+      diocese:
+        type: object
+        properties:
+          diocode:
+            type: string
+          dioname:
+            type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Authentication response definition
+  authres:
+    properties:
+      _id:
+        type: string
+      believercode:
+        type: string
+      admincode:
+        type: string
+      firstname:
+        type: string
+      middlename:
+        type: string
+      lastname:
+        type: string
+      phonenumber:
+        type: string
+      device_id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      profilepicture:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: object
+        properties:
+          year:
+            type: number
+          month:
+            type: number
+          day:
+            type: number
+      status:
+        type: string
+      healthinfo:
+        type: string
+      nationality:
+        type: string
+      jobtitle:
+        type: string
+      regdate:
+        type: string
+        format: datetime
+      baptismstatus:
+        type: string
+      maritalstatus:
+        type: string
+      participationlevel:
+        type: array
+        items:
+          type: string
+      residenceadress:
+        type: object
+        properties:
+          street:
+            type: string
+          road:
+            type: string
+          district:
+            type: string
+          region:
+            type: string
+      relatives:
+        type: array
+        items:
+          type: object
+          properties:
+            relation:
+              type: string
+            person:
+              type: string
+      hobbies:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Believer Model Definition
+  believer:
+    properties:
+      _id:
+        type: string
+      believercode:
+        type: string
+      title:
+        type: string
+      firstname:
+        type: string
+      middlename:
+        type: string
+      lastname:
+        type: string
+      phonenumber:
+        type: string
+      device_id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      communityid:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      profilepicture:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: object
+        properties:
+          year:
+            type: number
+          month:
+            type: number
+          day:
+            type: number
+      status:
+        type: string
+      healthinfo:
+        type: string
+      nationality:
+        type: string
+      jobtitle:
+        type: string
+      regdate:
+        type: string
+        format: datetime
+      baptismstatus:
+        type: string
+      maritalstatus:
+        type: string
+      kipaimarastatus:
+        type: string
+      participationlevel:
+        type: array
+        items:
+          type: string
+      residenceadress:
+        type: object
+        properties:
+          street:
+            type: string
+          road:
+            type: string
+          district:
+            type: string
+          region:
+            type: string
+      relatives:
+        type: array
+        items:
+          type: object
+          properties:
+            relation:
+              type: string
+            person:
+              type: string
+      hobbies:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+#Relative model Definition
+  relative:
+    properties:
+      relation:
+        type: string
+      person:
+        type: string
+# Mode Definition for profilepic
+  profiledata:
+    required:
+      - believerinfo
+    properties:
+      believerinfo:
+        type: string
+# Mode Definition for token
+  tokendata:
+    required:
+      - device_id
+    properties:
+      device_id:
+        type: string
+# Believer Model Definition
+  believerreg:
+    required:
+      - believercode
+      - firstname
+      - lastname
+      - status
+      - password
+      - title
+      - gender
+      - dob
+      - residenceadress
+      - regdate
+      - baptismstatus
+      - churchcode
+      - churchname
+      - diocode
+      - dioname
+    properties:
+      _id:
+        type: string
+      believercode:
+        type: string
+      password:
+        type: string
+      title:
+        type: string
+      firstname:
+        type: string
+      middlename:
+        type: string
+      lastname:
+        type: string
+      phonenumber:
+        type: string
+      device_id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      communityid:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      profilepicture:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: object
+        properties:
+          year:
+            type: number
+          month:
+            type: number
+          day:
+            type: number
+      status:
+        type: string
+      healthinfo:
+        type: string
+      nationality:
+        type: string
+      jobtitle:
+        type: string
+      regdate:
+        type: string
+        format: datetime
+      baptismstatus:
+        type: string
+      maritalstatus:
+        type: string
+      kipaimarastatus:
+        type: string
+      participationlevel:
+        type: array
+        items:
+          type: string
+      residenceadress:
+        type: object
+        properties:
+          street:
+            type: string
+          road:
+            type: string
+          district:
+            type: string
+          region:
+            type: string
+      relatives:
+        type: array
+        items:
+          type: object
+          properties:
+            relation:
+              type: string
+            person:
+              type: string
+      hobbies:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Admin reg Model Definition
+  adminreg:
+    required:
+      - admincode
+      - title
+      - status
+      - password
+      - firstname
+      - lastname
+      - gender
+      - dob
+    properties:
+      _id:
+        type: string
+      admincode:
+        type: string
+      password:
+        type: string
+      title:
+        type: string
+      firstname:
+        type: string
+      middlename:
+        type: string
+      lastname:
+        type: string
+      phonenumber:
+        type: string
+      device_id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      profilepicture:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: object
+        properties:
+          year:
+            type: number
+          month:
+            type: number
+          day:
+            type: number
+      status:
+        type: string
+      healthinfo:
+        type: string
+      nationality:
+        type: string
+      jobtitle:
+        type: string
+      regdate:
+        type: string
+        format: datetime
+      baptismstatus:
+        type: string
+      maritalstatus:
+        type: string
+      participationlevel:
+        type: array
+        items:
+          type: string
+      residenceadress:
+        type: object
+        properties:
+          street:
+            type: string
+          road:
+            type: string
+          district:
+            type: string
+          region:
+            type: string
+      relatives:
+        type: array
+        items:
+          type: object
+          properties:
+            relation:
+              type: string
+            person:
+              type: string
+      hobbies:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Admin Model Definition
+  admin:
+    properties:
+      _id:
+        type: string
+      admincode:
+        type: string
+      title:
+        type: string
+      firstname:
+        type: string
+      middlename:
+        type: string
+      lastname:
+        type: string
+      phonenumber:
+        type: string
+      device_id:
+        type: string
+      diocode:
+        type: string
+      dioname:
+        type: string
+      churchid:
+        type: string
+      churchcode:
+        type: string
+      churchname:
+        type: string
+      communitycode:
+        type: string
+      communityname:
+        type: string
+      profilepicture:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      dob:
+        type: object
+        properties:
+          year:
+            type: number
+          month:
+            type: number
+          day:
+            type: number
+      status:
+        type: string
+      healthinfo:
+        type: string
+      nationality:
+        type: string
+      jobtitle:
+        type: string
+      regdate:
+        type: string
+        format: datetime
+      baptismstatus:
+        type: string
+      maritalstatus:
+        type: string
+      participationlevel:
+        type: array
+        items:
+          type: string
+      residenceadress:
+        type: object
+        properties:
+          street:
+            type: string
+          road:
+            type: string
+          district:
+            type: string
+          region:
+            type: string
+      relatives:
+        type: array
+        items:
+          type: object
+          properties:
+            relation:
+              type: string
+            person:
+              type: string
+      hobbies:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+#Login Model Defition
+  login:
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+#Update Password Model Defition
+  logindata:
+    required:
+      - username
+      - password
+      - newpassword
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      newpassword:
+        type: string
+# Believer Existance Data
+  usercode:
+    properties:
+      username:
+        type: string
+
+# General Response Message
+  message:
+    required:
+      - success
+      - message
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+# Info Model Definition
+  info:
+    required:
+      - infotitle
+      - groupcode
+      - body
+      - ageto
+      - agefrom
+    properties:
+      _id:
+        type: string
+      infotitle:
+        type: string
+      groupcode:
+        type: string
+      agefrom:
+        type: number
+      ageto:
+        type: number
+      body:
+        type: string
+      valid:
+        type: number
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Country model Definition
+  country:
+    required:
+      - nationname
+      - nationvalue
+    properties:
+      _id:
+        type: string
+      nationname:
+        type: string
+      nationvalue:
+        type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+# Agegroup Model Definition
+  agegroup:
+    required:
+      - agegroupname
+      - agefrom
+      - ageto
+      - description
+    properties:
+      _id:
+        type: string
+      agegroupname:
+        type: string
+      agefrom:
+        type: number
+      ageto:
+        type: number
+      description:
+        type: string
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
